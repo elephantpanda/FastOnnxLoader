@@ -34,4 +34,4 @@ using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new De
     binding.BindInput(key, value);
 }
 ```
-Although I'm not sure if this will create different values if the shorts array is the same.
+Although I'm not sure if this will create different values if the shorts array is the same. It does speed things up though.
