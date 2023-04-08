@@ -18,6 +18,8 @@ Steps
 9. Bind the output
 10. Run the inference with RunWithBindingAndNames()
 
+(Steps 1 and 3 might be able to be combined by using the `use_external_data_format=True` flag but I don't know if this will put all the weights in one file or separately)
+
 Issues
 ===
 1. BindInput(...) seems to not release RAM after it pushed the data onto the GPU
