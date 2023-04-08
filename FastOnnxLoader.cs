@@ -54,7 +54,7 @@ public class FastOnnxLoader : MonoBehaviour
                 else if (session.InputMetadata[key].ElementType.Name == "Float16")
                 {
                     ushorts = new ushort[bytes.Length / 2];
-                    Buffer.BlockCopy(bytes, 0, shorts, 0, bytes.Length);
+                    Buffer.BlockCopy(bytes, 0, ushorts, 0, bytes.Length);
                 }
                 else
                 {
