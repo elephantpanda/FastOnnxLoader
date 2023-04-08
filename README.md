@@ -21,8 +21,7 @@ Steps
 
 Issues
 ===
-1. BindInput(...) seems to not release RAM after it pushed the data onto the GPU
-2. loading in the weight-less onnx sometimes takes longer than expected
+1. loading in the weight-less onnx sometimes takes longer than expected
 
 
 
