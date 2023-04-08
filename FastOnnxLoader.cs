@@ -83,7 +83,7 @@ public class FastOnnxLoader : MonoBehaviour
                     binding.BindInput(key, value);
                 }
             }
-            else if (dims[0] > 0)
+            else if (dims[0] > 0) //we are assuming these are Float16's
             {
                 using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<ushort>(ushorts, dims)))
                 {
