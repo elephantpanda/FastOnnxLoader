@@ -25,13 +25,4 @@ Issues
 2. loading in the weight-less onnx sometimes takes longer than expected
 
 
-Improvements
-===
-I am considering using:
-```
-using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<ushort>(new Memory<ushort>(shorts,0,dimSize), dims)))
-{
-    binding.BindInput(key, value);
-}
-```
-Although I'm not sure if this will create different values if the shorts array is the same. It does speed things up though.
+
