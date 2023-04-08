@@ -17,3 +17,8 @@ Steps
 8. Bind the actual input data
 9. Bind the output
 10. Run the inference with RunWithBindingAndNames()
+
+Issues
+===
+1. BindInput(...) seems to not release RAM after it pushed the data onto the GPU
+2. loading in the weight-less onnx sometimes takes longer than expected
