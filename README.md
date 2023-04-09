@@ -6,7 +6,7 @@ This script is a test to load an ONNX file in OnnxRuntime with less RAM by first
 Workflow
 ===
 1. export the torch model using `torch.onnx.export()` which gives you your basic model.onnx file
-2. Use `python separate.py` on model.onnx to separate weights and also rename bad wieght names.
+2. Use `python separate.py` on model.onnx to separate weights and also rename bad weight names.
 3. Use `python clear.py` on this new model.onnx file
 4. Use the C# code to load in the `model_without_weights.onnx` and sequentially load in the weight files.
 
