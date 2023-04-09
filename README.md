@@ -21,7 +21,6 @@ If you already have an onnx file with separated weights (for example it might be
 
 Issues
 ===
-1. loading in the weight-less onnx sometimes takes longer than expected
-2. Sometimes if the weights are named things like "onnx::MatMul" then the external weight file could be named as a UUID because filenames can't have ":" in them.
+1. Appears to be a memory leak in BindInput that doesn't clear up the system RAM after pushing weights to the GPU.
 
 
