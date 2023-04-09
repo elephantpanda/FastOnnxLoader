@@ -74,14 +74,14 @@ public class FastOnnxLoader : MonoBehaviour
             {
                 using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
                 {
-                    binding.BindInput(key, value);
+                    binding.BindInput(key, value); binding.SynchronizeBoundInputs();
                 }
             }
             else if (dims[0] > 0) //we are assuming these are Float16's
             {
                 using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
                 {
-                    binding.BindInput(key, value);
+                    binding.BindInput(key, value); binding.SynchronizeBoundInputs();
                 }
             }
         }
@@ -91,11 +91,11 @@ public class FastOnnxLoader : MonoBehaviour
         {
             using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<long>(new int[] { 1, i })))
             {
-                binding.BindInput("input_ids", value);
+                binding.BindInput("input_ids", value); binding.SynchronizeBoundInputs();
             }
             using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(new int[] { 1, i, 50257 })))
             {
-                binding.BindOutput("output", value);
+                binding.BindOutput("output", value); binding.SynchronizeBoundOutputs();
             }
             var output = session.RunWithBindingAndNames(new RunOptions { }, binding);
             var tensor = output.First().AsTensor<Float16>();
