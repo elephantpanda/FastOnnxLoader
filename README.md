@@ -3,7 +3,7 @@ Loads in onnx files with less RAM. (Not necessarily faster)
 
 This script is a test to load an ONNX file in OnnxRuntime with less RAM by first loading in an ONNX with no embedded weights, then sequentially loading in the weight files one by one.
 
-Steps
+Steps (
 ===
 
 1. export the torch model with `torch.onnx.export(..)` and the flag `export_params=True` [This creates an onnx file with embeded weights **"model.onnx"**)
@@ -17,6 +17,13 @@ Steps
 8. Bind the actual input data
 9. Bind the output
 10. Run the inference with RunWithBindingAndNames()
+
+New Workflow
+===
+1. export the torch model using `torch.onnx.export()` which gives you your basic model.onnx file
+2. If the file does not have separate weights, then use `python separate.py` on model.onnx
+3. Use `python clear.py` on this new model.onnx file
+4. Use the C# code to load in the `model_without_weights.onnx` and sequentially load in the weight files.
 
 separate.py
 ===
