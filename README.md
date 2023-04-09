@@ -18,6 +18,10 @@ Steps
 9. Bind the output
 10. Run the inference with RunWithBindingAndNames()
 
+separate.py
+===
+This takes an onnx file and separates it into separate weight files. It makes sure to rename weights with illegal characters such as ":"
+
 clear.py
 ===
 If you already have an onnx file with separated weights (for example it might be a >2GB onnx). Then you can just use clear.py to create a **model_without_weights.onnx** file.
