@@ -21,6 +21,6 @@ for init in model.graph.initializer:
 
 
 
-# Save the modified model to a new ONNX file
+# Save the modified model to a new ONNX file (must be in a differnt folder!)
 output_path = "separated//model.onnx"
 onnx.save(model, output_path,save_as_external_data=True, all_tensors_to_one_file=False)
