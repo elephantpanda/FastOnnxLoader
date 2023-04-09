@@ -67,7 +67,7 @@ public class FastOnnxLoader : MonoBehaviour
             else
             {
                 Debug.Log("Error: Weight file not found!" + key);
-                return;
+                //could be an input
             }
 
             if (session.InputMetadata[key].ElementType.Name == "Boolean")
