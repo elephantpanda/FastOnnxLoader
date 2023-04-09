@@ -34,7 +34,6 @@ public class FastOnnxLoader : MonoBehaviour
 
         //---now we load all the weights from the files and bind them to the inputs
         binding = session.CreateIoBinding();
-        ushort[] ushorts = null;
         Float16[] float16s = null;
         bool[] bools = null;
 
@@ -56,9 +55,7 @@ public class FastOnnxLoader : MonoBehaviour
                 }
                 else if (eType == "Float16")
                 {
-                    ushorts = new ushort[bytes.Length / 2];
-                    Buffer.BlockCopy(bytes, 0, ushorts, 0, bytes.Length);
-                    float16s = TensorExt.ShortsToFloat16(ushorts);
+                    float16s = BytesToFloat16(bytes);
                 }
                 else
                 {
@@ -117,6 +114,25 @@ public class FastOnnxLoader : MonoBehaviour
         if (session != null)
         {
             session.Dispose();
+        }
+    }
+    
+    //Fast Byte array to Float16 array
+     public static Float16[] BytesToFloat16(byte[] source)
+    {
+        Float16[] float16s = new Float16[source.Length/2];
+
+        GCHandle handle = GCHandle.Alloc(float16s, GCHandleType.Pinned);
+        try
+        {
+            System.IntPtr pointer = handle.AddrOfPinnedObject();
+            Marshal.Copy(source, 0, pointer, source.Length);
+            return float16s;
+        }
+        finally
+        {
+            if (handle.IsAllocated)
+                handle.Free();
         }
     }
 }
