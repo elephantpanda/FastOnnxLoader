@@ -60,27 +60,18 @@ public class FastOnnxLoader : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("**Unknown type:" + session.InputMetadata[key].ElementType.Name);
+                    Debug.Log("Error:Unknown type:" + session.InputMetadata[key].ElementType.Name);
+                    return;
                 }
             }
             else
             {
-                //----hack for missing weight file
-                Debug.Log("Weights not found=" + key);
-                if (session.InputMetadata[key].ElementType.Name == "Float16")
-                {
-                    ushorts = TensorExt.RandomUshortArray(dims);
-                    float16s = TensorExt.ShortsToFloat16(ushorts);
-                }
-                else
-                {
-                    Debug.Log("Unknown type:" + session.InputMetadata[key].ElementType.Name);
-                }
+                Debug.Log("Error: Weight file not found!" + key);
+                return;
             }
 
             if (session.InputMetadata[key].ElementType.Name == "Boolean")
             {
-                Debug.Log("Bool************\n" + key);
                 using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
                 {
                     binding.BindInput(key, value);
