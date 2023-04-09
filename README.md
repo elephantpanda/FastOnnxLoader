@@ -22,5 +22,6 @@ If you already have an onnx file with separated weights (for example it might be
 Issues
 ===
 1. Appears to be a memory leak in BindInput that doesn't clear up the system RAM after pushing weights to the GPU.
+2. Current bottleneck is reading in a tensor of Float16s.
 
 
