@@ -160,5 +160,22 @@ public class FastOnnxLoader : MonoBehaviour
                 handle.Free();
         }
     }
+      public static T[] BytesTo<T>(byte[] source)
+     {
+         T[] floats = new T[source.Length /  Marshal.SizeOf(typeof(T))];
+
+         GCHandle handle = GCHandle.Alloc(floats, GCHandleType.Pinned);
+         try
+         {
+             System.IntPtr pointer = handle.AddrOfPinnedObject();
+             Marshal.Copy(source, 0, pointer, source.Length);
+             return floats;
+         }
+         finally
+         {
+             if (handle.IsAllocated)
+                 handle.Free();
+         }
+     }
 }
 
