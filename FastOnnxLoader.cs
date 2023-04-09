@@ -43,7 +43,9 @@ public class FastOnnxLoader : MonoBehaviour
         foreach (var key in session.InputMetadata.Keys)
         {
             int[] dims = session.InputMetadata[key].Dimensions;
-            string filename = "weights\\" + key;
+            string fname= key;
+            fname = fname.Replace(":", "_");
+            string filename = "weights\\" + fname;
             string eType = session.InputMetadata[key].ElementType.Name;
 
             var eName = session.InputMetadata[key].ElementType.Name;
