@@ -15,7 +15,7 @@ replaced_names = set()
 
 # Iterate over the initializers and create new inputs if the initializer data is over 640 bytes
 for initializer in model.graph.initializer:
-    if sys.getsizeof(initializer.raw_data) > 640+34: #(For some reason weights of less than 640 bytes don't get externalized)
+    if sys.getsizeof(initializer.raw_data) > 640+34: #(For some reason weights of less than 640 bytes don't get externalized) Alternatively we could check if the weight file exists.
         #print(str(initializer.name)+"-->"+str(sys.getsizeof(initializer.raw_data) ))
         input = onnx.helper.make_tensor_value_info(
             name=initializer.name,
