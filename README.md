@@ -25,3 +25,6 @@ Issues
 2. Current bottleneck is reading in a tensor of Float16s.
 
 
+See also
+===
+https://github.com/microsoft/onnxruntime/issues/15429
