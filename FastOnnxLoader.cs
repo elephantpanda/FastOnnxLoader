@@ -68,14 +68,14 @@ public class FastOnnxLoader : MonoBehaviour
                         }
                         break;
                     case "SByte":
-                        sbytes = TensorExt.BytesTo<SByte>(bytes);
+                        sbytes = BytesTo<SByte>(bytes);
                         using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<SByte>(sbytes, dims)))
                         {
                             binding.BindInput(key, value); binding.SynchronizeBoundInputs();
                         }
                         break;
                     case "Float16":
-                        float16s = TensorExt.BytesToFloat16(bytes);
+                        float16s = BytesTo<Float16>(bytes);
                         using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
                         //using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(new Memory<Float16>(float16s,0,dimSize), dims)))
                         {
@@ -83,14 +83,14 @@ public class FastOnnxLoader : MonoBehaviour
                         }
                         break;
                     case "Single":
-                        floats = TensorExt.BytesTo<float>(bytes);
+                        floats = BytesTo<float>(bytes);
                         using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<float>(floats, dims)))
                         {
                             binding.BindInput(key, value); binding.SynchronizeBoundInputs();
                         }
                         break;
                     case "Int":
-                        ints = TensorExt.BytesTo<int>(bytes);
+                        ints = BytesTo<int>(bytes);
                         using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<int>(ints, dims)))
                         {
                             binding.BindInput(key, value); binding.SynchronizeBoundInputs();
@@ -125,7 +125,7 @@ public class FastOnnxLoader : MonoBehaviour
             var output = session.RunWithBindingAndNames(new RunOptions { }, binding);
             var tensor = output.First().AsTensor<Float16>();
             Debug.Log("output=" + string.Join(",", tensor.Dimensions.ToArray()));
-            var floats = TensorExt.ToFloat(tensor).ToArray<float>();
+            var floats = TensorExt.ToFloat(tensor).ToArray<float>(); //custom function to turn Float16 Tensor to float tensor
 
             Debug.Log(floats[0] + "," + floats[1] + ",...");
         }
@@ -142,24 +142,7 @@ public class FastOnnxLoader : MonoBehaviour
         }
     }
     
-    //Fast Byte array to Float16 array
-     public static Float16[] BytesToFloat16(byte[] source)
-    {
-        Float16[] float16s = new Float16[source.Length/2];
-
-        GCHandle handle = GCHandle.Alloc(float16s, GCHandleType.Pinned);
-        try
-        {
-            System.IntPtr pointer = handle.AddrOfPinnedObject();
-            Marshal.Copy(source, 0, pointer, source.Length);
-            return float16s;
-        }
-        finally
-        {
-            if (handle.IsAllocated)
-                handle.Free();
-        }
-    }
+    //Fast Byte conversion
       public static T[] BytesTo<T>(byte[] source)
      {
          T[] floats = new T[source.Length /  Marshal.SizeOf(typeof(T))];
