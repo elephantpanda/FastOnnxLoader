@@ -21,8 +21,7 @@ If you already have an onnx file with separated weights (for example it might be
 
 Issues
 ===
-1. Current bottleneck is reading in a tensor of Float16s.
-2. Small bit of RAM leakage.
+No issues at the moment
 
 
 See also
