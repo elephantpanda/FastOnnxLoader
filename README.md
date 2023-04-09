@@ -18,6 +18,10 @@ Steps
 9. Bind the output
 10. Run the inference with RunWithBindingAndNames()
 
+clear.py
+===
+If you already have an onnx file with separated weights (for example it might be a >2GB onnx). Then you can just use clear.py to create a **model_without_weights.onnx** file.
+
 
 Issues
 ===
