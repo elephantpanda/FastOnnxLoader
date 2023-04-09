@@ -42,17 +42,19 @@ public class FastOnnxLoader : MonoBehaviour
         {
             int[] dims = session.InputMetadata[key].Dimensions;
             string filename = "weights\\" + key;
+            string eType = session.InputMetadata[key].ElementType.Name;
 
             if (File.Exists(filename))
             {
                 long length = new FileInfo(filename).Length;
                 byte[] bytes = File.ReadAllBytes(filename);
-                if (session.InputMetadata[key].ElementType.Name == "Boolean")
+                
+                if ( eType == "Boolean")
                 {
                     bools = new bool[bytes.Length];
                     Buffer.BlockCopy(bytes, 0, bools, 0, bytes.Length);
                 }
-                else if (session.InputMetadata[key].ElementType.Name == "Float16")
+                else if (eType == "Float16")
                 {
                     ushorts = new ushort[bytes.Length / 2];
                     Buffer.BlockCopy(bytes, 0, ushorts, 0, bytes.Length);
@@ -69,19 +71,20 @@ public class FastOnnxLoader : MonoBehaviour
                 Debug.Log("Error: Weight file not found!" + key);
                 //could be an input
             }
-
-            if (session.InputMetadata[key].ElementType.Name == "Boolean")
-            {
-                using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
+            if (dims[0] > 0){
+                if (eType  == "Boolean")
                 {
-                    binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                    using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
+                    {
+                        binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                    }
                 }
-            }
-            else if (dims[0] > 0) //we are assuming these are Float16's
-            {
-                using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
+                else if (eType == "Float16")
                 {
-                    binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                    using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
+                    {
+                        binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                    }
                 }
             }
         }
