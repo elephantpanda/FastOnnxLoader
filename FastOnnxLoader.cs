@@ -36,6 +36,9 @@ public class FastOnnxLoader : MonoBehaviour
         binding = session.CreateIoBinding();
         Float16[] float16s = null;
         bool[] bools = null;
+        float[] floats = null;
+        SByte[] sbytes = null;
+        int[] ints = null;
 
         foreach (var key in session.InputMetadata.Keys)
         {
@@ -43,46 +46,68 @@ public class FastOnnxLoader : MonoBehaviour
             string filename = "weights\\" + key;
             string eType = session.InputMetadata[key].ElementType.Name;
 
-            if (File.Exists(filename))
+            var eName = session.InputMetadata[key].ElementType.Name;
+            if (dims[0] > 0 && File.Exists(filename))
             {
-                long length = new FileInfo(filename).Length;
                 byte[] bytes = File.ReadAllBytes(filename);
-                
-                if ( eType == "Boolean")
+
+                switch (eName)
                 {
-                    bools = new bool[bytes.Length];
-                    Buffer.BlockCopy(bytes, 0, bools, 0, bytes.Length);
+                    case "Boolean":
+                        bools = new bool[bytes.Length];
+                        Buffer.BlockCopy(bytes, 0, bools, 0, bytes.Length);
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    case "Byte":
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<byte>(bytes, dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    case "SByte":
+                        sbytes = TensorExt.BytesTo<SByte>(bytes);
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<SByte>(sbytes, dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    case "Float16":
+                        float16s = TensorExt.BytesToFloat16(bytes);
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
+                        //using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(new Memory<Float16>(float16s,0,dimSize), dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    case "Single":
+                        floats = TensorExt.BytesTo<float>(bytes);
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<float>(floats, dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    case "Int":
+                        ints = TensorExt.BytesTo<int>(bytes);
+                        using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<int>(ints, dims)))
+                        {
+                            binding.BindInput(key, value); binding.SynchronizeBoundInputs();
+                        }
+                        break;
+                    default:
+                        Debug.Log("Type not found:" + session.InputMetadata[key].ElementType.Name);
+                        return (session, null);
                 }
-                else if (eType == "Float16")
-                {
-                    float16s = BytesToFloat16(bytes);
-                }
-                else
-                {
-                    Debug.Log("Error:Unknown type:" + session.InputMetadata[key].ElementType.Name);
-                    return;
-                }
+                float16s = null;
+                bools = null;
+                ints = null;
+                floats = null;
             }
             else
             {
-                Debug.Log("Error: Weight file not found!" + key);
-                //could be an input
-            }
-            if (dims[0] > 0){
-                if (eType  == "Boolean")
-                {
-                    using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<bool>(bools, dims)))
-                    {
-                        binding.BindInput(key, value); binding.SynchronizeBoundInputs();
-                    }
-                }
-                else if (eType == "Float16")
-                {
-                    using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
-                    {
-                        binding.BindInput(key, value); binding.SynchronizeBoundInputs();
-                    }
-                }
+                Debug.Log("File not found:" + key + "\n" + string.Join(",", dims) + "=" + TensorExt.DimSize(dims) * 2 + ":" + session.InputMetadata[key].ElementType.Name);
             }
         }
 
