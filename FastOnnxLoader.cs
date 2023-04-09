@@ -35,6 +35,7 @@ public class FastOnnxLoader : MonoBehaviour
         //---now we load all the weights from the files and bind them to the inputs
         binding = session.CreateIoBinding();
         ushort[] ushorts = null;
+        Float16[] float16s = null;
         bool[] bools = null;
 
         foreach (var key in session.InputMetadata.Keys)
@@ -55,6 +56,7 @@ public class FastOnnxLoader : MonoBehaviour
                 {
                     ushorts = new ushort[bytes.Length / 2];
                     Buffer.BlockCopy(bytes, 0, ushorts, 0, bytes.Length);
+                    float16s = TensorExt.ShortsToFloat16(ushorts);
                 }
                 else
                 {
@@ -68,6 +70,7 @@ public class FastOnnxLoader : MonoBehaviour
                 if (session.InputMetadata[key].ElementType.Name == "Float16")
                 {
                     ushorts = TensorExt.RandomUshortArray(dims);
+                    float16s = TensorExt.ShortsToFloat16(ushorts);
                 }
                 else
                 {
@@ -85,7 +88,7 @@ public class FastOnnxLoader : MonoBehaviour
             }
             else if (dims[0] > 0) //we are assuming these are Float16's
             {
-                using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<ushort>(ushorts, dims)))
+                using (FixedBufferOnnxValue value = FixedBufferOnnxValue.CreateFromTensor(new DenseTensor<Float16>(float16s, dims)))
                 {
                     binding.BindInput(key, value);
                 }
