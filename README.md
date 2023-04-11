@@ -33,6 +33,10 @@ https://github.com/microsoft/onnxruntime/issues/15429
 ![image](https://user-images.githubusercontent.com/33497043/230762304-1123df5c-e374-4614-8a5e-8ddc28452def.png)
 
 ----
+Decompression
+===
+I am also working on a utility that decompressed quantized onnx files so they can be run faster in float16. This is useful to save space on the hard drive.
+
 getoffsets.py
 ===
 This is a helper file that extracts all the scales and zero_points from a quantized onnx files and writes them to a json file. 
