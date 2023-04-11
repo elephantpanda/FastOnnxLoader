@@ -12,7 +12,7 @@ Workflow
 
 separate.py
 ===
-This takes an onnx file and separates it into separate weight files. It makes sure to rename weights with illegal characters such as ":". One thing to not is that it doesn't separate weight with less than about 650 bytes.
+This takes an onnx file and separates it into separate weight files. It makes sure to rename weights with illegal characters such as ":". One thing to not is that it doesn't separate weight with less than about 650 bytes. (The exact number is not documented)
 
 clear.py
 ===
