@@ -33,7 +33,7 @@ https://github.com/microsoft/onnxruntime/issues/15429
 ![image](https://user-images.githubusercontent.com/33497043/230762304-1123df5c-e374-4614-8a5e-8ddc28452def.png)
 
 ----
-getoffset.py
+getoffsets.py
 ===
 This is a helper file that extracts all the scales and zero_points from a quantized onnx files and writes them to a json file. 
 
