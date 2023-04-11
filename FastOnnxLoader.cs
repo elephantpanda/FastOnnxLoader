@@ -100,7 +100,7 @@ public class FastOnnxLoader : MonoBehaviour
                         break;
                     default:
                         Debug.Log("Type not found:" + session.InputMetadata[key].ElementType.Name);
-                        return (session, null);
+                        return;
                 }
                 float16s = null;
                 bools = null;
