@@ -45,7 +45,7 @@ public class FastOnnxLoader : MonoBehaviour
             int[] dims = session.InputMetadata[key].Dimensions;
             string fname= key;
             fname = fname.Replace(":", "_");
-            string filename = "separated\\" + fname;
+            string filename = "separated\\" + fname;  //(folder containing the separated weights)
             string eType = session.InputMetadata[key].ElementType.Name;
 
             var eName = session.InputMetadata[key].ElementType.Name;
