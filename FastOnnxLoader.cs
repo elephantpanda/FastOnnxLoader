@@ -27,7 +27,7 @@ public class FastOnnxLoader : MonoBehaviour
         };
         sessionOptions.AppendExecutionProvider_DML(0);
 
-        session = new InferenceSession("model_only.onnx", sessionOptions);
+        session = new InferenceSession("separated\\model_without_weights", sessionOptions);
         sessionOptions.Dispose();
         Debug.Log("session=" + session);
 
@@ -45,7 +45,7 @@ public class FastOnnxLoader : MonoBehaviour
             int[] dims = session.InputMetadata[key].Dimensions;
             string fname= key;
             fname = fname.Replace(":", "_");
-            string filename = "weights\\" + fname;
+            string filename = "separated\\" + fname;
             string eType = session.InputMetadata[key].ElementType.Name;
 
             var eName = session.InputMetadata[key].ElementType.Name;
